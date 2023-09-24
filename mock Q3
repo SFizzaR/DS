@@ -1,0 +1,114 @@
+//Q3
+#include <iostream>
+using namespace std;
+
+class node {
+public:
+    string model;
+    float price;
+    float Esize;
+    node* next;
+
+    node(string m, float p, float e) {
+        model = m;
+        price = p;
+        Esize = e;
+        next = NULL;
+    }
+};
+
+class Cars {
+public:
+    node* head;
+    node* tail;
+
+    Cars() {
+        head = NULL;
+        tail = NULL;
+    }
+
+    void AddAtTail(string m, float p, float s) {
+        node* n = new node(m, p, s);
+        if (head == NULL) {
+            head = n;
+            tail = n; // Update the tail when adding the first node
+            return;
+        }
+        tail->next = n;
+        tail = n;
+    }
+
+    void bymodel() {
+        node* curr = head;
+        while (curr != NULL) {
+            node* temp = curr->next;
+            while (temp != NULL) {
+                if (curr->model > temp->model) {
+                    swap(curr->model, temp->model);
+                    swap(curr->price, temp->price);
+                    swap(curr->Esize, temp->Esize);
+                }
+                temp = temp->next;
+            }
+            curr = curr->next;
+        }
+    }
+
+    void byprice() {
+        node* curr = head;
+        while (curr != NULL) {
+            node* temp = curr->next;
+            while (temp != NULL) {
+                if (curr->price > temp->price) {
+                    swap(curr->model, temp->model);
+                    swap(curr->price, temp->price);
+                    swap(curr->Esize, temp->Esize);
+                }
+                temp = temp->next;
+            }
+            curr = curr->next;
+        }
+    }
+
+    void byenginesize() {
+        node* curr = head;
+        while (curr != NULL) {
+            node* temp = curr->next;
+            while (temp != NULL) {
+                if (curr->Esize < temp->Esize) {
+                    swap(curr->model, temp->model);
+                    swap(curr->price, temp->price);
+                    swap(curr->Esize, temp->Esize);
+                }
+                temp = temp->next;
+            }
+            curr = curr->next;
+        }
+    }
+
+    void Display() {
+        node* temp = head;
+        while (temp != NULL) {
+            cout << "Model: " << temp->model << "\t Price: " << temp->price << "\t Engine size: " << temp->Esize << endl;
+            temp = temp->next;
+        }
+    }
+};
+
+int main() {
+    Cars list;
+    list.AddAtTail("Toyota", 25000, 34);
+    list.AddAtTail("Honda", 23000, 43);
+    list.AddAtTail("Suzuki", 2000, 32);
+    list.bymodel();
+    cout << "Model" << endl;
+    list.Display();
+    list.byprice();
+    cout << "Price" << endl;
+    list.Display();
+    list.byenginesize();
+    cout << "Engine size" << endl;
+    list.Display();
+
+    return 0;
+}

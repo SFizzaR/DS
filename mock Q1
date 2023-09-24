@@ -21,6 +21,9 @@ public:
     string getlname() {
         return lname;
     }
+    string getfname (){
+    	return fname;
+	}
     bool isAssigned() {
         return assigned;
     }
@@ -48,33 +51,49 @@ public:
         return true;
     }
 
-   bool findseat(int r, string lname, string fname) {
-    int c = 0;
+   bool findseat(int r, string lname, string fname, int c) {
     if (isFull(r)) {
         return false;
     }
-    
-    c = nextempty(r, c);
-    
     while (c != -1) {
         if (c == 0 || (c > 0 && lname != std[r][c - 1].getlname() && lname != std[r][c + 1].getlname())) {
             std[r][c].setstudent(fname, lname);
             return true;
         }
-        c = nextempty(r, c + 1); // Move to the next seat
+        c = nextempty(r, c + 1);
     }
     
-    return false; // No suitable seat found
+    return false; 
 }
-
+bool preferedseat (int r, int prefered, string fname, string lname){
+	for (int i=0; i<r; i++){
+		if (prefered==nextempty(i, prefered)){
+			return findseat (i, lname, fname, prefered);
+		}
+		else 
+		return false;
+	}
+}
+void display (){
+	for (int i=0; i<10; i++){
+		for (int j=0; j<5; j++){
+			if (std[i][j].isAssigned()){
+				cout << std[i][j].getfname() << "\t";
+			}
+			else 
+			cout << "Empty \t";
+		}
+		cout << endl;
+	}
+}
 };
 
 int main() {
     seating s;
-    int r;
+    int r, prefer;
     string first, last;
-    char choice;
-    bool done;
+    char choice, p;
+    bool done, complete;
     char dis;
     do {
         cout << "Enter first name: ";
@@ -83,11 +102,21 @@ int main() {
         cin >> last;
         cout << "Does student have disability? (y/n): ";
         cin >> dis;
+        cout << "Do you have a preffered seat: ";
+        cin >> p;
+        if (p== 'y'){
+        	cout << "What is your prefrence?";
+        	cin >> prefer;
+		}
         if (dis == 'y') {
             r = 0;
+            if (p=='y'){
+            	complete=s.preferedseat(r, prefer-1, first, last);
+			}
+			else{
             do {
                 if (!s.isFull(r)) {
-                    done = s.findseat(r, last, first);
+                    done = s.findseat(r, last, first, 0);
                 }
                 else
                 r++;
@@ -95,11 +124,17 @@ int main() {
             if (done == false) {
                 cout << "Rows are full." << endl;
             }
-        } else {
+        }
+        } 
+		else {
             r = 5;
+            if (choice=='y'){
+            	complete=s.preferedseat(r, prefer-1, first, last);
+			}
+			else{
             do {
                 if (!s.isFull(r)) {
-                    done = s.findseat(r, last, first);
+                    done = s.findseat(r, last, first, 0);
                 }
                 else
                 r++;
@@ -107,9 +142,12 @@ int main() {
             if (done == false) {
                 cout << "Rows are full." << endl;
             }
+
         }
+    }
         cout << "Do you want to add more students? Enter 'y' for yes and 'n' for no: ";
         cin >> choice;
     } while (choice == 'y');
+    s.display();
     return 0;
 }

@@ -1,0 +1,115 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class students {
+    string fname;
+    string lname;
+    bool assigned;
+
+public:
+    students() {
+        fname = " ";
+        lname = " ";
+        assigned = false;
+    }
+    void setstudent(string first, string last) {
+        fname = first;
+        lname = last;
+        assigned = true;
+    }
+    string getlname() {
+        return lname;
+    }
+    bool isAssigned() {
+        return assigned;
+    }
+};
+
+class seating {
+    students std[10][5];
+
+public:
+    int nextempty(int r, int c) {
+        for (int i = c; i < 5; i++) {
+            if (!std[r][i].isAssigned()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    bool isFull(int r) {
+        for (int i = 0; i < 5; i++) {
+            if (!std[r][i].isAssigned()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+   bool findseat(int r, string lname, string fname) {
+    int c = 0;
+    if (isFull(r)) {
+        return false;
+    }
+    
+    c = nextempty(r, c);
+    
+    while (c != -1) {
+        if (c == 0 || (c > 0 && lname != std[r][c - 1].getlname() && lname != std[r][c + 1].getlname())) {
+            std[r][c].setstudent(fname, lname);
+            return true;
+        }
+        c = nextempty(r, c + 1); // Move to the next seat
+    }
+    
+    return false; // No suitable seat found
+}
+
+};
+
+int main() {
+    seating s;
+    int r;
+    string first, last;
+    char choice;
+    bool done;
+    char dis;
+    do {
+        cout << "Enter first name: ";
+        cin >> first;
+        cout << "Enter last name: ";
+        cin >> last;
+        cout << "Does student have disability? (y/n): ";
+        cin >> dis;
+        if (dis == 'y') {
+            r = 0;
+            do {
+                if (!s.isFull(r)) {
+                    done = s.findseat(r, last, first);
+                }
+                else
+                r++;
+            } while (done == false && r < 5);
+            if (done == false) {
+                cout << "Rows are full." << endl;
+            }
+        } else {
+            r = 5;
+            do {
+                if (!s.isFull(r)) {
+                    done = s.findseat(r, last, first);
+                }
+                else
+                r++;
+            } while (done == false && r < 10);
+            if (done == false) {
+                cout << "Rows are full." << endl;
+            }
+        }
+        cout << "Do you want to add more students? Enter 'y' for yes and 'n' for no: ";
+        cin >> choice;
+    } while (choice == 'y');
+    return 0;
+}

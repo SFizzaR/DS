@@ -1,0 +1,31 @@
+cout << "found at: " << pos << endl;#include <iostream>
+using namespace std;
+
+int InterpolationSearch (int A[], int n, int e){
+	int start, end, pos; 
+	start=0;
+	end=n-1;
+	while (start<end && e>=A[start] && e<=A[end]){
+		pos= start + ((end-start)/A[end]-A[start])*(e-A[start]);
+	if (A[pos]==e){
+		
+		return pos;
+	}
+	else if (e>A[pos]){
+		start++;
+	}
+	else if (e<A[pos]){
+		end++;
+	}
+}
+return -1;
+}
+
+int main() {
+    int arr[8] = {12, 34, 45, 67, 78, 80, 92, 134};
+    int x=InterpolationSearch(arr, 7, 12);
+    if (x!=-1){
+    	cout << "found at: " << x << endl;
+	}
+	else cout << "Not found";
+}
